@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>공개수업 참관 조회</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f4f2ee; --card:#fff; --deep:#1c2d4f; --mid:#2e5090;
+  --accent:#d03e43; --green:#2a7a50; --gold:#b87a1a;
+  --border:#ddd9d0; --muted:#8a8a9a; --text:#1e1e2e; --cream:#edeae3;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* ── 헤더 ── */
+.hdr{background:var(--deep);height:60px;padding:0 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--accent);}
+.hdr-l{display:flex;align-items:center;gap:12px;}
+.hdr-ico{background:var(--accent);width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.hdr-ttl{font-family:'Noto Serif KR',serif;font-size:1.05rem;font-weight:700;color:#fff;}
+.hdr-sub{font-size:0.7rem;color:rgba(255,255,255,0.4);margin-top:1px;}
+.hdr-r{display:flex;align-items:center;gap:8px;}
+.admin-badge{background:var(--gold);color:#fff;padding:4px 10px;border-radius:6px;font-size:0.71rem;font-weight:700;display:none;}
+.admin-badge.on{display:inline-block;}
+.hdr-btn{background:transparent;border:1px solid rgba(255,255,255,0.22);color:rgba(255,255,255,0.55);padding:6px 13px;border-radius:7px;font-family:'Noto Sans KR',sans-serif;font-size:0.75rem;cursor:pointer;transition:all .18s;}
+.hdr-btn:hover{border-color:rgba(255,255,255,.5);color:#fff;}
+.hdr-btn.logout{border:none;color:rgba(255,255,255,.4);font-size:0.72rem;text-decoration:underline;padding:4px 6px;}
+
+/* ── 레이아웃 ── */
+.wrap{display:flex;min-height:calc(100vh - 63px);}
+
+/* ── 사이드바 ── */
+.side{width:200px;background:var(--card);border-right:1px solid var(--border);padding:20px 12px;display:none;flex-direction:column;gap:4px;flex-shrink:0;}
+.side.on{display:flex;}
+.side-sect{font-size:0.67rem;font-weight:700;color:var(--muted);letter-spacing:1px;padding:0 8px;margin:10px 0 3px;}
+.side-sect:first-child{margin-top:0;}
+.snav{width:100%;text-align:left;padding:8px 11px;border:none;border-radius:8px;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:0.84rem;color:var(--text);cursor:pointer;transition:background .14s;display:flex;align-items:center;gap:7px;}
+.snav:hover{background:var(--cream);}
+.snav.on{background:rgba(46,80,144,0.1);color:var(--mid);font-weight:600;}
+
+/* ── 메인 ── */
+.main{flex:1;padding:30px 34px;max-width:900px;}
+@media(max-width:640px){.main{padding:18px 14px;}}
+
+/* ── 카드 ── */
+.card{background:var(--card);border-radius:14px;border:1px solid var(--border);padding:24px;margin-bottom:20px;box-shadow:0 1px 5px rgba(0,0,0,.05);}
+.ctitle{font-family:'Noto Serif KR',serif;font-size:.97rem;font-weight:700;color:var(--deep);margin-bottom:14px;display:flex;align-items:center;gap:7px;}
+
+/* ── 검색 ── */
+.sw{position:relative;}
+.si{width:100%;padding:14px 50px 14px 18px;border:2px solid var(--border);border-radius:11px;font-family:'Noto Sans KR',sans-serif;font-size:.98rem;color:var(--text);background:var(--bg);outline:none;transition:border .2s,box-shadow .2s;}
+.si:focus{border-color:var(--mid);box-shadow:0 0 0 3px rgba(46,80,144,.1);}
+.sico{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:1.1rem;pointer-events:none;}
+.hint{font-size:.73rem;color:var(--muted);margin-top:6px;}
+.sgbox{position:absolute;top:calc(100% + 5px);left:0;right:0;background:var(--card);border:1px solid var(--border);border-radius:11px;box-shadow:0 10px 28px rgba(0,0,0,.1);z-index:200;overflow:hidden;display:none;}
+.sgbox.on{display:block;}
+.sg{padding:11px 17px;cursor:pointer;font-size:.88rem;border-bottom:1px solid var(--cream);display:flex;justify-content:space-between;align-items:center;transition:background .12s;}
+.sg:last-child{border-bottom:none;}
+.sg:hover{background:var(--cream);}
+.sg em{color:var(--accent);font-style:normal;font-weight:700;}
+.sg-cnt{font-size:.73rem;color:var(--muted);flex-shrink:0;margin-left:10px;}
+
+/* ── 결과 카드 ── */
+.rcard{background:var(--card);border-radius:14px;border:1px solid var(--border);overflow:hidden;box-shadow:0 1px 5px rgba(0,0,0,.05);}
+.rhead{background:var(--deep);color:#fff;padding:20px 26px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.rname{font-family:'Noto Serif KR',serif;font-size:1.25rem;font-weight:700;}
+.rname .rnum{font-family:'Noto Sans KR',sans-serif;font-size:.75rem;color:rgba(255,255,255,.5);font-weight:400;margin-left:7px;}
+.rlabel{font-size:.73rem;color:rgba(255,255,255,.5);margin-top:3px;}
+.rbadge{background:var(--accent);padding:7px 18px;border-radius:22px;font-size:.88rem;font-weight:700;white-space:nowrap;align-self:center;}
+
+/* ── 참관 테이블 ── */
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:.86rem;}
+thead th{background:var(--deep);color:rgba(255,255,255,.85);padding:10px 14px;text-align:left;font-weight:500;font-size:.79rem;white-space:nowrap;}
+thead th:first-child{border-radius:0;}
+tbody tr{border-bottom:1px solid var(--cream);transition:background .12s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:#faf9f7;}
+tbody td{padding:11px 14px;vertical-align:middle;}
+.no{color:var(--muted);font-size:.78rem;text-align:center;width:36px;}
+.tag{display:inline-block;padding:3px 9px;border-radius:18px;font-size:.75rem;font-weight:600;}
+.ts{background:rgba(46,80,144,.1);color:var(--mid);}
+.tp{background:rgba(208,62,67,.1);color:var(--accent);}
+.tc{background:rgba(42,122,80,.1);color:var(--green);}
+.tn-main{font-weight:600;color:var(--text);}
+.tn-sub{display:block;font-size:.72rem;color:var(--muted);margin-top:1px;}
+.empty{text-align:center;padding:38px;color:var(--muted);font-size:.88rem;}
+
+/* ── 패널 ── */
+.panel{display:none;}.panel.on{display:block;}
+
+/* ── 업로드 ── */
+.uzone{border:2px dashed var(--border);border-radius:11px;padding:28px 18px;text-align:center;cursor:pointer;transition:all .18s;background:var(--bg);margin-bottom:10px;}
+.uzone:hover,.uzone.ov{border-color:var(--mid);background:rgba(46,80,144,.04);}
+.uzone p{font-size:.82rem;color:var(--muted);line-height:1.7;margin-top:6px;}
+.uzone strong{color:var(--mid);}
+input[type=file]{display:none;}
+.fbadge{display:flex;align-items:center;gap:9px;padding:9px 13px;background:var(--cream);border-radius:9px;font-size:.82rem;margin-bottom:8px;}
+.fn{flex:1;font-weight:500;}
+.fok{color:var(--green);font-weight:700;font-size:.76rem;}
+.fwait{color:var(--gold);font-weight:700;font-size:.76rem;}
+.ferr{color:var(--accent);font-weight:700;font-size:.76rem;}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border:none;border-radius:9px;font-family:'Noto Sans KR',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .17s;}
+.bp{background:var(--mid);color:#fff;}.bp:hover{background:var(--deep);transform:translateY(-1px);}
+.bp:disabled{background:var(--muted);cursor:not-allowed;transform:none;}
+.bs{background:var(--cream);color:var(--text);border:1px solid var(--border);}.bs:hover{background:var(--border);}
+.sbar{padding:10px 14px;border-radius:8px;font-size:.81rem;margin-top:11px;display:none;}
+.sbar.on{display:block;}
+.ok{background:rgba(42,122,80,.1);color:var(--green);border:1px solid rgba(42,122,80,.25);}
+.er{background:rgba(208,62,67,.1);color:var(--accent);border:1px solid rgba(208,62,67,.2);}
+.inf{background:rgba(46,80,144,.07);color:var(--mid);border:1px solid rgba(46,80,144,.15);}
+.ibox{background:rgba(46,80,144,.05);border:1px solid rgba(46,80,144,.12);border-radius:9px;padding:11px 14px;font-size:.79rem;color:var(--mid);line-height:1.8;margin-bottom:15px;}
+
+/* ── 이름 매핑 ── */
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px;max-height:400px;overflow-y:auto;padding:2px;margin-bottom:13px;}
+.mrow{display:flex;align-items:center;gap:7px;}
+.mno{font-size:.78rem;color:var(--muted);font-weight:700;min-width:32px;}
+.mi{flex:1;padding:7px 9px;border:1px solid var(--border);border-radius:7px;font-family:'Noto Sans KR',sans-serif;font-size:.82rem;background:var(--bg);outline:none;transition:border .14s;}
+.mi:focus{border-color:var(--mid);}
+
+/* ── 모달 ── */
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:900;display:none;align-items:center;justify-content:center;}
+.mbg.on{display:flex;}
+.modal{background:var(--card);border-radius:16px;padding:30px 26px;width:320px;max-width:90vw;box-shadow:0 20px 60px rgba(0,0,0,.25);}
+.modal h2{font-family:'Noto Serif KR',serif;font-size:1.1rem;color:var(--deep);margin-bottom:5px;}
+.modal p{font-size:.8rem;color:var(--muted);margin-bottom:18px;}
+.modal input{width:100%;padding:11px 15px;border:2px solid var(--border);border-radius:9px;font-family:'Noto Sans KR',sans-serif;font-size:.93rem;outline:none;margin-bottom:10px;transition:border .18s;}
+.modal input:focus{border-color:var(--mid);}
+.mbtns{display:flex;gap:8px;}
+.merr{font-size:.76rem;color:var(--accent);margin-bottom:8px;display:none;}
+.merr.on{display:block;}
+</style>
+</head>
+<body>
+
+<!-- 헤더 -->
+<div class="hdr">
+  <div class="hdr-l">
+    <div class="hdr-ico">📚</div>
+    <div>
+      <div class="hdr-ttl">공개수업 참관 조회</div>
+      <div class="hdr-sub">2024학년도 2학기 수업장학</div>
+    </div>
+  </div>
+  <div class="hdr-r">
+    <span class="admin-badge" id="adminBadge">⚙ 관리자</span>
+    <button class="hdr-btn logout" id="logoutBtn" onclick="logout()" style="display:none">로그아웃</button>
+    <button class="hdr-btn" id="loginBtn" onclick="openModal()">🔐 관리자</button>
+  </div>
+</div>
+
+<!-- 로그인 모달 -->
+<div class="mbg" id="modal">
+  <div class="modal">
+    <h2>🔐 관리자 로그인</h2>
+    <p>관리자 비밀번호를 입력하세요</p>
+    <div class="merr" id="merr">비밀번호가 틀렸습니다</div>
+    <input type="password" id="pwInput" placeholder="비밀번호" onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="mbtns">
+      <button class="btn bp" style="flex:1" onclick="doLogin()">로그인</button>
+      <button class="btn bs" onclick="closeModal()">취소</button>
+    </div>
+  </div>
+</div>
+
+<!-- 본문 -->
+<div class="wrap">
+
+  <!-- 사이드바 (관리자) -->
+  <div class="side" id="side">
+    <div class="side-sect">교사 관리</div>
+    <button class="snav on" id="sn-names" onclick="showPanel('names')">👤 이름 설정</button>
+    <div class="side-sect">데이터</div>
+    <button class="snav" id="sn-upload" onclick="showPanel('upload')">📂 파일 업로드</button>
+    <button class="snav" id="sn-sample" onclick="loadSample()">📋 내장 데이터 사용</button>
+  </div>
+
+  <!-- 메인 -->
+  <div class="main">
+
+    <!-- ① 검색 (항상 표시) -->
+    <div class="panel on" id="panel-search">
+      <div class="card">
+        <div class="ctitle">🔍 공개수업 참관 이력 조회</div>
+        <div class="sw">
+          <input id="si" class="si" type="text"
+            placeholder="이름 또는 번호 입력 (예: 홍길동, 45번)"
+            oninput="onInput()" autocomplete="off">
+          <span class="sico">🔎</span>
+          <div class="sgbox" id="sgbox"></div>
+        </div>
+        <div class="hint">이름 일부만 입력해도 검색됩니다 · 이름 미설정 시 번호로 검색 가능</div>
+      </div>
+      <div id="result"></div>
+    </div>
+
+    <!-- ② 이름 설정 (관리자) -->
+    <div class="panel" id="panel-names">
+      <div class="card">
+        <div class="ctitle">👤 교사 이름 매핑</div>
+        <div class="ibox">각 번호에 실제 교사 이름을 입력 후 저장하면, 검색 및 결과에 이름이 표시됩니다.<br>45번은 교감선생님 등 수업을 하지 않고 참관만 하는 분도 포함됩니다.</div>
+        <div class="mgrid" id="mgrid"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn bp" onclick="saveNames()">💾 저장</button>
+          <button class="btn bs" onclick="clearNames()">🗑 초기화</button>
+        </div>
+        <div class="sbar" id="nameSt"></div>
+      </div>
+    </div>
+
+    <!-- ③ 파일 업로드 (관리자) -->
+    <div class="panel" id="panel-upload">
+      <div class="card">
+        <div class="ctitle">📋 파일 구조 안내</div>
+        <div class="ibox">
+          <strong>① 참여 횟수 파일</strong> — 행: 수업 진행 교사 (1~44번), 열: 참관한 교사 (1~45번), 셀값: 참관 시 1, 마지막 행: 총계<br>
+          <strong>② 수업장학 파일</strong> — 헤더: 교과/이름/일시/요일/교시/학급 · 수업 진행 교사별 수업 정보
+        </div>
+
+        <div class="ctitle">📊 참여 횟수 파일</div>
+        <div class="uzone" id="z1" onclick="document.getElementById('f1').click()"
+          ondragover="dov(event,'z1')" ondragleave="dlv('z1')" ondrop="dop(event,1)">
+          <div style="font-size:1.8rem">📊</div>
+          <p>클릭하거나 드래그 · <strong>xlsx / xls</strong></p>
+        </div>
+        <input type="file" id="f1" accept=".xlsx,.xls" onchange="rf(this,1)">
+        <div id="b1"></div>
+
+        <div class="ctitle" style="margin-top:18px">📅 수업장학 파일</div>
+        <div class="uzone" id="z2" onclick="document.getElementById('f2').click()"
+          ondragover="dov(event,'z2')" ondragleave="dlv('z2')" ondrop="dop(event,2)">
+          <div style="font-size:1.8rem">📅</div>
+          <p>클릭하거나 드래그 · <strong>xlsx / xls</strong></p>
+        </div>
+        <input type="file" id="f2" accept=".xlsx,.xls" onchange="rf(this,2)">
+        <div id="b2"></div>
+
+        <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn bp" id="procBtn" onclick="processFiles()" disabled>⚡ 처리하기</button>
+          <button class="btn bs" onclick="loadSample()">📋 내장 데이터 사용</button>
+        </div>
+        <div class="sbar" id="procSt"></div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /wrap -->
+
+<script>
+// ── 비밀번호 (변경 원하면 여기서 수정) ──────────────────────────────
+const ADMIN_PW = '1234';
+
+// ── 내장 데이터 ──────────────────────────────────────────────────────
+const SAMPLE = {"1번":{"attended":[{"teacher_num":"2번","subject":"체육","date":"4.25","day":"목","period":"1교시","class_":"3학년 5반"},{"teacher_num":"4번","subject":"체육","date":"5.08","day":"수","period":"2교시","class_":"2학년 6반"}],"total":2},"2번":{"attended":[{"teacher_num":"1번","subject":"체육","date":"4.15","day":"월","period":"4교시","class_":"3학년 3반"},{"teacher_num":"29번","subject":"음악","date":"9.26","day":"목","period":"3교시","class_":"1-6(음악실)"},{"teacher_num":"38번","subject":"영어","date":"10.18","day":"금","period":"6교시","class_":"1학년 1반"}],"total":3},"3번":{"attended":[{"teacher_num":"1번","subject":"체육","date":"4.15","day":"월","period":"4교시","class_":"3학년 3반"},{"teacher_num":"10번","subject":"사회","date":"6.03","day":"월","period":"4교시","class_":"1학년 7반"},{"teacher_num":"41번","subject":"영어","date":"10.22","day":"화","period":"4교시","class_":"1학년 3반"}],"total":3},"4번":{"attended":[{"teacher_num":"2번","subject":"체육","date":"4.25","day":"목","period":"1교시","class_":"3학년 5반"},{"teacher_num":"3번","subject":"체육","date":"5.07","day":"화","period":"1교시","class_":"1학년 7반"},{"teacher_num":"40번","subject":"중국어","date":"10.22","day":"화","period":"3교시","class_":"3학년 4반"}],"total":3},"5번":{"attended":[{"teacher_num":"6번","subject":"수학","date":"5.14","day":"화","period":"4교시","class_":"3학년 3반"},{"teacher_num":"7번","subject":"수학","date":"5.21","day":"화","period":"5교시","class_":"2학년 1반"},{"teacher_num":"9번","subject":"수학","date":"5.24","day":"금","period":"2교시","class_":"1학년 6반"}],"total":3},"6번":{"attended":[{"teacher_num":"5번","subject":"수학","date":"5.14","day":"화","period":"5교시","class_":"2학년 6반"},{"teacher_num":"7번","subject":"수학","date":"5.21","day":"화","period":"5교시","class_":"2학년 1반"},{"teacher_num":"20번","subject":"과학","date":"6.19","day":"수","period":"4교시","class_":"1학년 2반"}],"total":3},"7번":{"attended":[{"teacher_num":"5번","subject":"수학","date":"5.14","day":"화","period":"5교시","class_":"2학년 6반"},{"teacher_num":"8번","subject":"수학","date":"5.22","day":"수","period":"2교시","class_":"3학년 6반"},{"teacher_num":"9번","subject":"수학","date":"5.24","day":"금","period":"2교시","class_":"1학년 6반"}],"total":3},"8번":{"attended":[{"teacher_num":"6번","subject":"수학","date":"5.14","day":"화","period":"4교시","class_":"3학년 3반"},{"teacher_num":"9번","subject":"수학","date":"5.24","day":"금","period":"2교시","class_":"1학년 6반"},{"teacher_num":"20번","subject":"과학","date":"6.19","day":"수","period":"4교시","class_":"1학년 2반"}],"total":3},"9번":{"attended":[{"teacher_num":"5번","subject":"수학","date":"5.14","day":"화","period":"5교시","class_":"2학년 6반"},{"teacher_num":"7번","subject":"수학","date":"5.21","day":"화","period":"5교시","class_":"2학년 1반"},{"teacher_num":"8번","subject":"수학","date":"5.22","day":"수","period":"2교시","class_":"3학년 6반"}],"total":3},"10번":{"attended":[{"teacher_num":"12번","subject":"과학","date":"6.07","day":"금","period":"5교시","class_":"2학년 1반"},{"teacher_num":"14번","subject":"과학","date":"6.11","day":"화","period":"4교시","class_":"2학년 4반"},{"teacher_num":"16번","subject":"도덕","date":"6.13","day":"목","period":"5교시","class_":"1학년 5반"}],"total":3},"11번":{"attended":[{"teacher_num":"12번","subject":"과학","date":"6.07","day":"금","period":"5교시","class_":"2학년 1반"},{"teacher_num":"22번","subject":"역사","date":"6.2","day":"목","period":"5교시","class_":"2학년 1반"},{"teacher_num":"23번","subject":"과학","date":"6.21","day":"금","period":"5교시","class_":"1학년 3반"}],"total":3},"12번":{"attended":[{"teacher_num":"10번","subject":"사회","date":"6.03","day":"월","period":"4교시","class_":"1학년 7반"},{"teacher_num":"11번","subject":"과학","date":"6.05","day":"수","period":"5교시","class_":"3학년 6반"},{"teacher_num":"22번","subject":"역사","date":"6.2","day":"목","period":"5교시","class_":"2학년 1반"},{"teacher_num":"39번","subject":"한문","date":"10.21","day":"월","period":"3교시","class_":"1학년 5반"}],"total":4},"13번":{"attended":[{"teacher_num":"11번","subject":"과학","date":"6.05","day":"수","period":"5교시","class_":"3학년 6반"},{"teacher_num":"12번","subject":"과학","date":"6.07","day":"금","period":"5교시","class_":"2학년 1반"},{"teacher_num":"23번","subject":"과학","date":"6.21","day":"금","period":"5교시","class_":"1학년 3반"}],"total":3},"14번":{"attended":[{"teacher_num":"10번","subject":"사회","date":"6.03","day":"월","period":"4교시","class_":"1학년 7반"},{"teacher_num":"12번","subject":"과학","date":"6.07","day":"금","period":"5교시","class_":"2학년 1반"},{"teacher_num":"16번","subject":"도덕","date":"6.13","day":"목","period":"5교시","class_":"1학년 5반"}],"total":3},"15번":{"attended":[{"teacher_num":"17번","subject":"사회","date":"6.14","day":"금","period":"2교시","class_":"1학년 4반"},{"teacher_num":"34번","subject":"영어","date":"10.16","day":"수","period":"4교시","class_":"3학년 5반"}],"total":2},"16번":{"attended":[{"teacher_num":"10번","subject":"사회","date":"6.03","day":"월","period":"4교시","class_":"1학년 7반"},{"teacher_num":"14번","subject":"과학","date":"6.11","day":"화","period":"4교시","class_":"2학년 4반"},{"teacher_num":"21번","subject":"국어","date":"6.2","day":"목","period":"3교시","class_":"3학년 5반"}],"total":3},"17번":{"attended":[{"teacher_num":"13번","subject":"도덕","date":"6.07","day":"금","period":"5교시","class_":"2학년 7반"},{"teacher_num":"15번","subject":"사회","date":"6.12","day":"수","period":"6교시","class_":"1학년 8반"},{"teacher_num":"21번","subject":"국어","date":"6.2","day":"목","period":"3교시","class_":"3학년 5반"}],"total":3},"18번":{"attended":[{"teacher_num":"9번","subject":"수학","date":"5.24","day":"금","period":"2교시","class_":"1학년 6반"},{"teacher_num":"19번","subject":"국어","date":"6.19","day":"수","period":"2교시","class_":"1학년 2반"},{"teacher_num":"40번","subject":"중국어","date":"10.22","day":"화","period":"3교시","class_":"3학년 4반"}],"total":3},"19번":{"attended":[{"teacher_num":"9번","subject":"수학","date":"5.24","day":"금","period":"2교시","class_":"1학년 6반"},{"teacher_num":"15번","subject":"사회","date":"6.12","day":"수","period":"6교시","class_":"1학년 8반"},{"teacher_num":"26번","subject":"국어","date":"6.28","day":"금","period":"5교시","class_":"1학년 4반"}],"total":3},"20번":{"attended":[{"teacher_num":"18번","subject":"국어","date":"6.19","day":"수","period":"4교시","class_":"2학년 6반"},{"teacher_num":"19번","subject":"국어","date":"6.19","day":"수","period":"2교시","class_":"1학년 2반"},{"teacher_num":"25번","subject":"국어","date":"6.24","day":"월","period":"5교시","class_":"2학년 3반"}],"total":3},"21번":{"attended":[{"teacher_num":"15번","subject":"사회","date":"6.12","day":"수","period":"6교시","class_":"1학년 8반"},{"teacher_num":"24번","subject":"역사","date":"6.21","day":"금","period":"4교시","class_":"3학년 2반"},{"teacher_num":"27번","subject":"기술가정","date":"9.23","day":"월","period":"1교시","class_":"2학년 2반"},{"teacher_num":"32번","subject":"특수","date":"10.11","day":"금","period":"2교시","class_":"통합교육지원실"},{"teacher_num":"33번","subject":"영어","date":"10.15","day":"화","period":"4교시","class_":"1학년 7반"},{"teacher_num":"34번","subject":"영어","date":"10.16","day":"수","period":"4교시","class_":"3학년 5반"}],"total":7},"22번":{"attended":[{"teacher_num":"7번","subject":"수학","date":"5.21","day":"화","period":"5교시","class_":"2학년 1반"},{"teacher_num":"16번","subject":"도덕","date":"6.13","day":"목","period":"5교시","class_":"1학년 5반"},{"teacher_num":"25번","subject":"국어","date":"6.24","day":"월","period":"5교시","class_":"2학년 3반"}],"total":3},"23번":{"attended":[{"teacher_num":"11번","subject":"과학","date":"6.05","day":"수","period":"5교시","class_":"3학년 6반"},{"teacher_num":"12번","subject":"과학","date":"6.07","day":"금","period":"5교시","class_":"2학년 1반"},{"teacher_num":"13번","subject":"도덕","date":"6.07","day":"금","period":"5교시","class_":"2학년 7반"}],"total":3},"24번":{"attended":[{"teacher_num":"21번","subject":"국어","date":"6.2","day":"목","period":"3교시","class_":"3학년 5반"},{"teacher_num":"29번","subject":"음악","date":"9.26","day":"목","period":"3교시","class_":"1-6(음악실)"},{"teacher_num":"39번","subject":"한문","date":"10.21","day":"월","period":"3교시","class_":"1학년 5반"}],"total":3},"25번":{"attended":[{"teacher_num":"13번","subject":"도덕","date":"6.07","day":"금","period":"5교시","class_":"2학년 7반"},{"teacher_num":"21번","subject":"국어","date":"6.2","day":"목","period":"3교시","class_":"3학년 5반"},{"teacher_num":"26번","subject":"국어","date":"6.28","day":"금","period":"5교시","class_":"1학년 4반"}],"total":3},"26번":{"attended":[{"teacher_num":"18번","subject":"국어","date":"6.19","day":"수","period":"4교시","class_":"2학년 6반"},{"teacher_num":"19번","subject":"국어","date":"6.19","day":"수","period":"2교시","class_":"1학년 2반"},{"teacher_num":"20번","subject":"과학","date":"6.19","day":"수","period":"4교시","class_":"1학년 2반"}],"total":3},"27번":{"attended":[{"teacher_num":"7번","subject":"수학","date":"5.21","day":"화","period":"5교시","class_":"2학년 1반"},{"teacher_num":"41번","subject":"영어","date":"10.22","day":"화","period":"4교시","class_":"1학년 3반"},{"teacher_num":"42번","subject":"정보","date":"10.23","day":"수","period":"6교시","class_":"2-4(멀티미디어실)"}],"total":3},"28번":{"attended":[{"teacher_num":"35번","subject":"영어","date":"10.17","day":"목","period":"6교시","class_":"2학년 5반"},{"teacher_num":"36번","subject":"미술","date":"10.18","day":"금","period":"3교시","class_":"1학년 7반"},{"teacher_num":"37번","subject":"미술","date":"10.18","day":"금","period":"5교시","class_":"2학년 4반"}],"total":3},"29번":{"attended":[{"teacher_num":"32번","subject":"특수","date":"10.11","day":"금","period":"2교시","class_":"통합교육지원실"},{"teacher_num":"39번","subject":"한문","date":"10.21","day":"월","period":"3교시","class_":"1학년 5반"},{"teacher_num":"43번","subject":"영어","date":"10.23","day":"수","period":"6교시","class_":"2학년 5반"}],"total":3},"30번":{"attended":[{"teacher_num":"21번","subject":"국어","date":"6.2","day":"목","period":"3교시","class_":"3학년 5반"},{"teacher_num":"26번","subject":"국어","date":"6.28","day":"금","period":"5교시","class_":"1학년 4반"},{"teacher_num":"43번","subject":"영어","date":"10.23","day":"수","period":"6교시","class_":"2학년 5반"}],"total":3},"31번":{"attended":[{"teacher_num":"15번","subject":"사회","date":"6.12","day":"수","period":"6교시","class_":"1학년 8반"},{"teacher_num":"32번","subject":"특수","date":"10.11","day":"금","period":"2교시","class_":"통합교육지원실"},{"teacher_num":"33번","subject":"영어","date":"10.15","day":"화","period":"4교시","class_":"1학년 7반"}],"total":3},"32번":{"attended":[{"teacher_num":"23번","subject":"과학","date":"6.21","day":"금","period":"5교시","class_":"1학년 3반"},{"teacher_num":"31번","subject":"음악","date":"10.1","day":"목","period":"2교시","class_":"3학년 6반"},{"teacher_num":"34번","subject":"영어","date":"10.16","day":"수","period":"4교시","class_":"3학년 5반"}],"total":3},"33번":{"attended":[{"teacher_num":"30번","subject":"기술가정","date":"9.27","day":"금","period":"1교시","class_":"2학년 8반"}],"total":1},"34번":{"attended":[{"teacher_num":"8번","subject":"수학","date":"5.22","day":"수","period":"2교시","class_":"3학년 6반"},{"teacher_num":"30번","subject":"기술가정","date":"9.27","day":"금","period":"1교시","class_":"2학년 8반"},{"teacher_num":"31번","subject":"음악","date":"10.1","day":"목","period":"2교시","class_":"3학년 6반"}],"total":3},"35번":{"attended":[{"teacher_num":"10번","subject":"사회","date":"6.03","day":"월","period":"4교시","class_":"1학년 7반"},{"teacher_num":"30번","subject":"기술가정","date":"9.27","day":"금","period":"1교시","class_":"2학년 8반"},{"teacher_num":"37번","subject":"미술","date":"10.18","day":"금","period":"5교시","class_":"2학년 4반"},{"teacher_num":"41번","subject":"영어","date":"10.22","day":"화","period":"4교시","class_":"1학년 3반"}],"total":4},"36번":{"attended":[{"teacher_num":"28번","subject":"기술가정","date":"9.26","day":"목","period":"2교시","class_":"3학년 4반"},{"teacher_num":"35번","subject":"영어","date":"10.17","day":"목","period":"6교시","class_":"2학년 5반"},{"teacher_num":"37번","subject":"미술","date":"10.18","day":"금","period":"5교시","class_":"2학년 4반"}],"total":3},"37번":{"attended":[{"teacher_num":"28번","subject":"기술가정","date":"9.26","day":"목","period":"2교시","class_":"3학년 4반"},{"teacher_num":"35번","subject":"영어","date":"10.17","day":"목","period":"6교시","class_":"2학년 5반"},{"teacher_num":"36번","subject":"미술","date":"10.18","day":"금","period":"3교시","class_":"1학년 7반"}],"total":3},"38번":{"attended":[{"teacher_num":"32번","subject":"특수","date":"10.11","day":"금","period":"2교시","class_":"통합교육지원실"},{"teacher_num":"35번","subject":"영어","date":"10.17","day":"목","period":"6교시","class_":"2학년 5반"},{"teacher_num":"39번","subject":"한문","date":"10.21","day":"월","period":"3교시","class_":"1학년 5반"}],"total":3},"39번":{"attended":[{"teacher_num":"10번","subject":"사회","date":"6.03","day":"월","period":"4교시","class_":"1학년 7반"},{"teacher_num":"20번","subject":"과학","date":"6.19","day":"수","period":"4교시","class_":"1학년 2반"},{"teacher_num":"24번","subject":"역사","date":"6.21","day":"금","period":"4교시","class_":"3학년 2반"}],"total":3},"40번":{"attended":[{"teacher_num":"12번","subject":"과학","date":"6.07","day":"금","period":"5교시","class_":"2학년 1반"},{"teacher_num":"23번","subject":"과학","date":"6.21","day":"금","period":"5교시","class_":"1학년 3반"},{"teacher_num":"25번","subject":"국어","date":"6.24","day":"월","period":"5교시","class_":"2학년 3반"}],"total":3},"41번":{"attended":[{"teacher_num":"27번","subject":"기술가정","date":"9.23","day":"월","period":"1교시","class_":"2학년 2반"},{"teacher_num":"42번","subject":"정보","date":"10.23","day":"수","period":"6교시","class_":"2-4(멀티미디어실)"},{"teacher_num":"43번","subject":"영어","date":"10.23","day":"수","period":"6교시","class_":"2학년 5반"}],"total":4},"42번":{"attended":[{"teacher_num":"13번","subject":"도덕","date":"6.07","day":"금","period":"5교시","class_":"2학년 7반"},{"teacher_num":"27번","subject":"기술가정","date":"9.23","day":"월","period":"1교시","class_":"2학년 2반"},{"teacher_num":"32번","subject":"특수","date":"10.11","day":"금","period":"2교시","class_":"통합교육지원실"},{"teacher_num":"43번","subject":"영어","date":"10.23","day":"수","period":"6교시","class_":"2학년 5반"}],"total":4},"43번":{"attended":[{"teacher_num":"20번","subject":"과학","date":"6.19","day":"수","period":"4교시","class_":"1학년 2반"},{"teacher_num":"41번","subject":"영어","date":"10.22","day":"화","period":"4교시","class_":"1학년 3반"},{"teacher_num":"42번","subject":"정보","date":"10.23","day":"수","period":"6교시","class_":"2-4(멀티미디어실)"}],"total":4},"44번":{"attended":[{"teacher_num":"27번","subject":"기술가정","date":"9.23","day":"월","period":"1교시","class_":"2학년 2반"},{"teacher_num":"40번","subject":"중국어","date":"10.22","day":"화","period":"3교시","class_":"3학년 4반"}],"total":2},"45번":{"attended":[{"teacher_num":"1번","subject":"체육","date":"4.15","day":"월","period":"4교시","class_":"3학년 3반"},{"teacher_num":"2번","subject":"체육","date":"4.25","day":"목","period":"1교시","class_":"3학년 5반"},{"teacher_num":"3번","subject":"체육","date":"5.07","day":"화","period":"1교시","class_":"1학년 7반"},{"teacher_num":"4번","subject":"체육","date":"5.08","day":"수","period":"2교시","class_":"2학년 6반"},{"teacher_num":"5번","subject":"수학","date":"5.14","day":"화","period":"5교시","class_":"2학년 6반"},{"teacher_num":"6번","subject":"수학","date":"5.14","day":"화","period":"4교시","class_":"3학년 3반"},{"teacher_num":"7번","subject":"수학","date":"5.21","day":"화","period":"5교시","class_":"2학년 1반"},{"teacher_num":"8번","subject":"수학","date":"5.22","day":"수","period":"2교시","class_":"3학년 6반"},{"teacher_num":"9번","subject":"수학","date":"5.24","day":"금","period":"2교시","class_":"1학년 6반"},{"teacher_num":"10번","subject":"사회","date":"6.03","day":"월","period":"4교시","class_":"1학년 7반"},{"teacher_num":"11번","subject":"과학","date":"6.05","day":"수","period":"5교시","class_":"3학년 6반"},{"teacher_num":"12번","subject":"과학","date":"6.07","day":"금","period":"5교시","class_":"2학년 1반"},{"teacher_num":"14번","subject":"과학","date":"6.11","day":"화","period":"4교시","class_":"2학년 4반"},{"teacher_num":"15번","subject":"사회","date":"6.12","day":"수","period":"6교시","class_":"1학년 8반"},{"teacher_num":"17번","subject":"사회","date":"6.14","day":"금","period":"2교시","class_":"1학년 4반"},{"teacher_num":"18번","subject":"국어","date":"6.19","day":"수","period":"4교시","class_":"2학년 6반"},{"teacher_num":"19번","subject":"국어","date":"6.19","day":"수","period":"2교시","class_":"1학년 2반"},{"teacher_num":"21번","subject":"국어","date":"6.2","day":"목","period":"3교시","class_":"3학년 5반"},{"teacher_num":"23번","subject":"과학","date":"6.21","day":"금","period":"5교시","class_":"1학년 3반"},{"teacher_num":"24번","subject":"역사","date":"6.21","day":"금","period":"4교시","class_":"3학년 2반"},{"teacher_num":"25번","subject":"국어","date":"6.24","day":"월","period":"5교시","class_":"2학년 3반"},{"teacher_num":"26번","subject":"국어","date":"6.28","day":"금","period":"5교시","class_":"1학년 4반"},{"teacher_num":"28번","subject":"기술가정","date":"9.26","day":"목","period":"2교시","class_":"3학년 4반"},{"teacher_num":"29번","subject":"음악","date":"9.26","day":"목","period":"3교시","class_":"1-6(음악실)"},{"teacher_num":"30번","subject":"기술가정","date":"9.27","day":"금","period":"1교시","class_":"2학년 8반"},{"teacher_num":"31번","subject":"음악","date":"10.1","day":"목","period":"2교시","class_":"3학년 6반"},{"teacher_num":"32번","subject":"특수","date":"10.11","day":"금","period":"2교시","class_":"통합교육지원실"},{"teacher_num":"33번","subject":"영어","date":"10.15","day":"화","period":"4교시","class_":"1학년 7반"},{"teacher_num":"35번","subject":"영어","date":"10.17","day":"목","period":"6교시","class_":"2학년 5반"},{"teacher_num":"36번","subject":"미술","date":"10.18","day":"금","period":"3교시","class_":"1학년 7반"},{"teacher_num":"37번","subject":"미술","date":"10.18","day":"금","period":"5교시","class_":"2학년 4반"},{"teacher_num":"38번","subject":"영어","date":"10.18","day":"금","period":"6교시","class_":"1학년 1반"},{"teacher_num":"39번","subject":"한문","date":"10.21","day":"월","period":"3교시","class_":"1학년 5반"},{"teacher_num":"42번","subject":"정보","date":"10.23","day":"수","period":"6교시","class_":"2-4(멀티미디어실)"},{"teacher_num":"43번","subject":"영어","date":"10.23","day":"수","period":"6교시","class_":"2학년 5반"}],"total":35}};
+
+// ── 앱 상태 ──────────────────────────────────────────────────────────
+const A = { data:{}, nameMap:{}, isAdmin:false };
+let R1=null, R2=null;
+
+function init(){
+  try{ const s=localStorage.getItem('nmap'); if(s) A.nameMap=JSON.parse(s); }catch(e){}
+  A.data = JSON.parse(JSON.stringify(SAMPLE));
+}
+
+// ── 이름 헬퍼 ─────────────────────────────────────────────────────────
+const dn = id => A.nameMap[id] || id;
+
+function teacherCell(id){
+  const name = A.nameMap[id];
+  if(name) return `<span class="tn-main">${name}</span><span class="tn-sub">${id}</span>`;
+  return `<span style="color:var(--muted)">${id}</span>`;
+}
+
+// ── 관리자 로그인 ──────────────────────────────────────────────────────
+function openModal(){ document.getElementById('modal').classList.add('on'); document.getElementById('pwInput').value=''; document.getElementById('merr').classList.remove('on'); setTimeout(()=>document.getElementById('pwInput').focus(),100); }
+function closeModal(){ document.getElementById('modal').classList.remove('on'); }
+function doLogin(){
+  const pw = document.getElementById('pwInput').value;
+  if(pw === ADMIN_PW){
+    A.isAdmin=true;
+    document.getElementById('adminBadge').classList.add('on');
+    document.getElementById('logoutBtn').style.display='inline';
+    document.getElementById('loginBtn').style.display='none';
+    document.getElementById('side').classList.add('on');
+    closeModal();
+    showPanel('names');
+  } else {
+    document.getElementById('merr').classList.add('on');
+    document.getElementById('pwInput').select();
+  }
+}
+function logout(){
+  A.isAdmin=false;
+  document.getElementById('adminBadge').classList.remove('on');
+  document.getElementById('logoutBtn').style.display='none';
+  document.getElementById('loginBtn').style.display='inline-block';
+  document.getElementById('side').classList.remove('on');
+  showPanel('search');
+}
+
+// ── 패널 전환 ─────────────────────────────────────────────────────────
+function showPanel(name){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.snav').forEach(b=>b.classList.remove('on'));
+  document.getElementById('panel-'+name).classList.add('on');
+  const btn = document.getElementById('sn-'+name);
+  if(btn) btn.classList.add('on');
+  if(name==='names') renderGrid();
+}
+
+// ── 검색 ──────────────────────────────────────────────────────────────
+function onInput(){
+  const q = document.getElementById('si').value.trim().toLowerCase();
+  const box = document.getElementById('sgbox');
+  if(!q){ box.classList.remove('on'); return; }
+  const re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi');
+  const ids = Object.keys(A.data).filter(id => dn(id).toLowerCase().includes(q) || id.toLowerCase().includes(q));
+  if(!ids.length){
+    box.innerHTML='<div class="sg" style="color:var(--muted);cursor:default">검색 결과 없음</div>';
+    box.classList.add('on'); return;
+  }
+  box.innerHTML = ids.slice(0,10).map(id=>{
+    const hi = dn(id).replace(re, m=>`<em>${m}</em>`);
+    return `<div class="sg" onclick="pick('${id}')"><span>${hi}</span><span class="sg-cnt">참관 ${A.data[id].total}회</span></div>`;
+  }).join('');
+  box.classList.add('on');
+}
+document.addEventListener('click', e=>{ if(!e.target.closest('.sw')) document.getElementById('sgbox').classList.remove('on'); });
+
+function pick(id){
+  document.getElementById('si').value = dn(id);
+  document.getElementById('sgbox').classList.remove('on');
+  renderResult(id);
+}
+
+// ── 결과 출력 ─────────────────────────────────────────────────────────
+function renderResult(id){
+  const d = A.data[id]; if(!d) return;
+  const att = d.attended;
+  const name = A.nameMap[id];
+  const nameHtml = name ? `${name}<span class="rnum">(${id})</span>` : id;
+
+  const rows = att.length===0
+    ? `<tr><td colspan="6" class="empty">참관 기록이 없습니다</td></tr>`
+    : att.map((a,i)=>`
+      <tr>
+        <td class="no">${i+1}</td>
+        <td>${teacherCell(a.teacher_num)}</td>
+        <td><span class="tag ts">${a.subject||'-'}</span></td>
+        <td style="white-space:nowrap">${a.date||'-'} <span style="color:var(--muted)">(${a.day||''})</span></td>
+        <td><span class="tag tp">${a.period||'-'}</span></td>
+        <td><span class="tag tc">${a.class_||'-'}</span></td>
+      </tr>`).join('');
+
+  document.getElementById('result').innerHTML=`
+    <div class="rcard">
+      <div class="rhead">
+        <div>
+          <div class="rname">${nameHtml}</div>
+          <div class="rlabel">공개수업 참관 이력</div>
+        </div>
+        <div class="rbadge">총 ${att.length}회 참관</div>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr>
+            <th class="no">#</th>
+            <th>수업 교사</th>
+            <th>교과</th>
+            <th>날짜</th>
+            <th>교시</th>
+            <th>학급</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+// ── 파일 업로드 ────────────────────────────────────────────────────────
+function dov(e,z){ e.preventDefault(); document.getElementById(z).classList.add('ov'); }
+function dlv(z){ document.getElementById(z).classList.remove('ov'); }
+function dop(e,n){ e.preventDefault(); dlv('z'+n); const f=e.dataTransfer.files[0]; if(f) readF(f,n); }
+function rf(inp,n){ if(inp.files[0]) readF(inp.files[0],n); }
+
+function readF(file,n){
+  setBadge(n,file.name,'wait','읽는 중...');
+  const r=new FileReader();
+  r.onload=e=>{
+    try{
+      const wb=XLSX.read(e.target.result,{type:'array'});
+      const raw=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1});
+      if(n===1) R1=raw; else R2=raw;
+      setBadge(n,file.name,'ok','로드 완료');
+      document.getElementById('procBtn').disabled=!(R1&&R2);
+    }catch(err){ setBadge(n,file.name,'err','읽기 실패'); }
+  };
+  r.readAsArrayBuffer(file);
+}
+function setBadge(n,fn,cls,msg){
+  const ic={wait:'⏳',ok:'✅',err:'❌'};
+  document.getElementById('b'+n).innerHTML=`<div class="fbadge"><span>📄</span><span class="fn">${fn}</span><span class="f${cls}">${ic[cls]} ${msg}</span></div>`;
+}
+
+function processFiles(){
+  try{
+    // 파일2: 수업 진행 교사 정보
+    let hr=-1;
+    for(let i=0;i<R2.length;i++){ if(R2[i].some(c=>String(c).includes('이름')||String(c).includes('교과'))){ hr=i; break; } }
+    if(hr<0){ showSt('procSt','❌ 수업장학 파일 헤더 없음','er'); return; }
+    const h=R2[hr].map(c=>String(c||'').trim());
+    const fi=k=>h.findIndex(v=>v===k);
+    const [si,ni,di,wi,pi,ci]=['교과','이름','일시','요일','교시','학급'].map(fi);
+    const li={};
+    for(let i=hr+1;i<R2.length;i++){
+      const r=R2[i]; const num=String(r[ni]||'').trim();
+      if(!num||num==='이름') continue;
+      let cls=String(r[ci]||'').trim();
+      const m=cls.match(/2024-0?(\d+)-0?(\d+)/);
+      if(m) cls=`${parseInt(m[1])}학년 ${parseInt(m[2])}반`;
+      li[num]={subject:String(r[si]||'').trim(),date:String(r[di]||'').trim(),day:String(r[wi]||'').trim(),period:String(r[pi]||'').trim(),class_:cls};
+    }
+
+    // 파일1: 행=수업교사, 열=참관자
+    const cols=R1[0]; // ['이름','1번',...,'45번']
+    const obsCols=cols.slice(1); // 참관자 열들 (1번~45번)
+    const newData={};
+    obsCols.forEach((obsCol,j)=>{
+      const obsId=String(obsCol||'').trim();
+      if(!obsId) return;
+      const attended=[];
+      for(let i=1;i<R1.length;i++){
+        const r=R1[i];
+        const tid=String(r[0]||'').trim();
+        if(!tid||tid==='총계') continue;
+        try{
+          if(parseFloat(String(r[j+1]||'').trim())===1 && li[tid]){
+            attended.push({teacher_num:tid,...li[tid]});
+          }
+        }catch(e){}
+      }
+      newData[obsId]={attended,total:attended.length};
+    });
+
+    A.data=newData;
+    renderGrid();
+    showSt('procSt',`✅ 완료! 참관자 ${Object.keys(newData).length}명 데이터 로드됨`,'ok');
+  }catch(err){ showSt('procSt','❌ 오류: '+err.message,'er'); }
+}
+
+function loadSample(){
+  A.data=JSON.parse(JSON.stringify(SAMPLE));
+  showSt('procSt','✅ 내장 데이터 로드됨','ok');
+  showPanel('search');
+}
+
+// ── 이름 매핑 ──────────────────────────────────────────────────────────
+function renderGrid(){
+  const g=document.getElementById('mgrid');
+  const ids=Object.keys(A.data).sort((a,b)=>parseInt(a)-parseInt(b));
+  if(!ids.length){ g.innerHTML='<div style="color:var(--muted);font-size:.83rem">데이터 없음</div>'; return; }
+  g.innerHTML=ids.map(id=>`
+    <div class="mrow">
+      <span class="mno">${id}</span>
+      <input class="mi" type="text" placeholder="이름 입력" data-id="${id}"
+        value="${A.nameMap[id]||''}" oninput="A.nameMap['${id}']=this.value">
+    </div>`).join('');
+}
+function saveNames(){
+  document.querySelectorAll('.mi').forEach(el=>{ A.nameMap[el.dataset.id]=el.value.trim(); });
+  try{ localStorage.setItem('nmap',JSON.stringify(A.nameMap)); }catch(e){}
+  showSt('nameSt','✅ 저장 완료. 이제 이름으로 검색할 수 있습니다.','ok');
+}
+function clearNames(){
+  A.nameMap={}; try{ localStorage.removeItem('nmap'); }catch(e){}
+  renderGrid(); showSt('nameSt','🗑 초기화 완료','inf');
+}
+
+// ── 유틸 ──────────────────────────────────────────────────────────────
+function showSt(id,msg,cls){
+  const el=document.getElementById(id); if(!el) return;
+  el.textContent=msg; el.className=`sbar on ${cls}`;
+  setTimeout(()=>el.classList.remove('on'),7000);
+}
+
+init();
+</script>
+</body>
+</html>
