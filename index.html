@@ -48,20 +48,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .card{background:var(--card);border-radius:14px;border:1px solid var(--border);padding:24px;margin-bottom:20px;box-shadow:0 1px 5px rgba(0,0,0,.05);}
 .ctitle{font-family:'Noto Serif KR',serif;font-size:.97rem;font-weight:700;color:var(--deep);margin-bottom:14px;display:flex;align-items:center;gap:7px;}
 
-/* ── 검색 ── */
-.sw{position:relative;}
-.si{width:100%;padding:14px 50px 14px 18px;border:2px solid var(--border);border-radius:11px;font-family:'Noto Sans KR',sans-serif;font-size:.98rem;color:var(--text);background:var(--bg);outline:none;transition:border .2s,box-shadow .2s;}
-.si:focus{border-color:var(--mid);box-shadow:0 0 0 3px rgba(46,80,144,.1);}
-.sico{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:1.1rem;pointer-events:none;}
-.hint{font-size:.73rem;color:var(--muted);margin-top:6px;}
-.sgbox{position:absolute;top:calc(100% + 5px);left:0;right:0;background:var(--card);border:1px solid var(--border);border-radius:11px;box-shadow:0 10px 28px rgba(0,0,0,.1);z-index:200;overflow:hidden;display:none;}
-.sgbox.on{display:block;}
-.sg{padding:11px 17px;cursor:pointer;font-size:.88rem;border-bottom:1px solid var(--cream);display:flex;justify-content:space-between;align-items:center;transition:background .12s;}
-.sg:last-child{border-bottom:none;}
-.sg:hover{background:var(--cream);}
-.sg em{color:var(--accent);font-style:normal;font-weight:700;}
-.sg-cnt{font-size:.73rem;color:var(--muted);flex-shrink:0;margin-left:10px;}
-
 /* ── 결과 카드 ── */
 .rcard{background:var(--card);border-radius:14px;border:1px solid var(--border);overflow:hidden;box-shadow:0 1px 5px rgba(0,0,0,.05);}
 .rhead{background:var(--deep);color:#fff;padding:20px 26px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;}
@@ -124,26 +110,7 @@ input[type=file]{display:none;}
 .mbg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:900;display:none;align-items:center;justify-content:center;}
 .mbg.on{display:flex;}
 .modal{background:var(--card);border-radius:16px;padding:28px 24px;width:340px;max-width:92vw;box-shadow:0 20px 60px rgba(0,0,0,.25);}
-.modal h2{font-family:'Noto Serif KR',serif;font-size:1.1rem;color:var(--deep);margin-bottom:5px;}
-.modal p{font-size:.8rem;color:var(--muted);margin-bottom:14px;}
-.modal input{width:100%;padding:11px 15px;border:2px solid var(--border);border-radius:9px;font-family:'Noto Sans KR',sans-serif;font-size:.93rem;outline:none;margin-bottom:10px;transition:border .18s;}
-.modal input:focus{border-color:var(--mid);}
-.mbtns{display:flex;gap:8px;}
-.merr{font-size:.76rem;color:var(--accent);margin-bottom:8px;display:none;}
-.merr.on{display:block;}
-/* 모달 탭 */
-.mtabs{display:flex;background:var(--cream);border-radius:9px;padding:3px;gap:3px;margin-bottom:16px;}
-.mtab{flex:1;padding:7px;border:none;border-radius:7px;font-family:'Noto Sans KR',sans-serif;font-size:.79rem;font-weight:500;color:var(--muted);background:transparent;cursor:pointer;transition:all .15s;}
-.mtab.on{background:var(--card);color:var(--deep);font-weight:700;box-shadow:0 1px 4px rgba(0,0,0,.1);}
-.mpanel{display:none;}.mpanel.on{display:block;}
-/* 개인 비번 배지 */
-.my-badge{background:var(--green);color:#fff;padding:4px 10px;border-radius:6px;font-size:.71rem;font-weight:700;display:none;}
-.my-badge.on{display:inline-block;}
-.my-info{background:rgba(42,122,80,.08);border:1px solid rgba(42,122,80,.2);border-radius:9px;padding:10px 13px;font-size:.78rem;color:var(--green);line-height:1.7;margin-bottom:12px;}
-select.msel{width:100%;padding:10px 13px;border:2px solid var(--border);border-radius:9px;font-family:'Noto Sans KR',sans-serif;font-size:.9rem;background:var(--bg);outline:none;margin-bottom:10px;transition:border .18s;}
-select.msel:focus{border-color:var(--green);}
-
-/* ── 로그인 메인 화면 ── */
+/* 로그인 메인 화면 */
 .login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100vh - 63px);padding:24px;width:100%;}
 .login-box{background:var(--card);border-radius:20px;border:1px solid var(--border);padding:40px 36px;width:100%;max-width:420px;box-shadow:0 4px 24px rgba(0,0,0,.08);}
 .login-logo{text-align:center;margin-bottom:24px;}
@@ -186,11 +153,11 @@ select.msel:focus{border-color:var(--green);}
 .set-msg{font-size:.75rem;margin-top:6px;padding:7px 10px;border-radius:7px;display:none;}
 .set-msg.ok{display:block;background:rgba(42,122,80,.1);color:var(--green);}
 .set-msg.er{display:block;background:rgba(208,62,67,.08);color:var(--accent);}
+.set-msg.inf{display:block;background:rgba(46,80,144,.07);color:var(--mid);}
 </style>
 </head>
 <body>
 
-<!-- 헤더 -->
 <div class="hdr">
   <div class="hdr-l">
     <div class="hdr-ico">📚</div>
@@ -207,7 +174,6 @@ select.msel:focus{border-color:var(--green);}
   </div>
 </div>
 
-<!-- 설정 모달 -->
 <div class="mbg" id="setModal">
   <div class="set-modal">
     <div class="set-tabs">
@@ -215,7 +181,6 @@ select.msel:focus{border-color:var(--green);}
       <button class="set-tab" id="stab-admin" onclick="switchSetTab('admin')">⚙ 관리자</button>
     </div>
 
-    <!-- 비밀번호 설정 패널 -->
     <div class="set-panel on" id="spanel-pw">
       <h2 style="font-family:'Noto Serif KR',serif;font-size:1rem;color:var(--deep);margin-bottom:6px">🔑 개인 비밀번호 설정</h2>
       <p style="font-size:.78rem;color:var(--muted);margin-bottom:14px">이름과 비밀번호를 등록하면<br>메인 화면에서 바로 로그인할 수 있습니다</p>
@@ -234,7 +199,6 @@ select.msel:focus{border-color:var(--green);}
       </div>
     </div>
 
-    <!-- 관리자 패널 -->
     <div class="set-panel" id="spanel-admin">
       <h2 style="font-family:'Noto Serif KR',serif;font-size:1rem;color:var(--deep);margin-bottom:6px">⚙ 관리자 로그인</h2>
       <p style="font-size:.78rem;color:var(--muted);margin-bottom:14px">관리자 비밀번호를 입력하세요</p>
@@ -250,10 +214,8 @@ select.msel:focus{border-color:var(--green);}
   </div>
 </div>
 
-<!-- 본문 -->
 <div class="wrap" id="mainWrap">
 
-  <!-- 사이드바 (관리자) -->
   <div class="side" id="side">
     <div class="side-sect">교사 관리</div>
     <button class="snav on" id="sn-names" onclick="showPanel('names')">👤 이름 설정</button>
@@ -262,7 +224,6 @@ select.msel:focus{border-color:var(--green);}
     <button class="snav" id="sn-sample" onclick="loadSample()">📋 내장 데이터 사용</button>
   </div>
 
-  <!-- ① 로그인 메인 화면 -->
   <div class="login-screen" id="loginScreen">
     <div class="login-box">
       <div class="login-logo">
@@ -281,7 +242,7 @@ select.msel:focus{border-color:var(--green);}
         <input type="password" id="loginPw" placeholder="비밀번호를 입력하세요"
           onkeydown="if(event.key==='Enter')doMainLogin()">
       </div>
-      <button class="login-btn" onclick="doMainLogin()">로그인</button>
+      <button class="login-btn" onclick="doMainLogin()" id="mainLoginBtn">로그인</button>
       <div class="login-sep"><span>또는</span></div>
       <div class="login-hint">
         비밀번호가 없으신가요? 오른쪽 상단<br>
@@ -290,7 +251,6 @@ select.msel:focus{border-color:var(--green);}
     </div>
   </div>
 
-  <!-- ② 결과 화면 (로그인 후) -->
   <div class="result-screen" id="resultScreen">
     <div class="result-topbar">
       <div class="result-who" id="resultWho"></div>
@@ -299,16 +259,15 @@ select.msel:focus{border-color:var(--green);}
     <div id="result"></div>
   </div>
 
-  <!-- ③ 관리자 패널들 -->
   <div class="main" id="adminMain" style="display:none">
 
     <div class="panel on" id="panel-names">
       <div class="card">
         <div class="ctitle">👤 교사 이름 매핑</div>
-        <div class="ibox">각 번호에 실제 교사 이름을 입력 후 저장하면, 로그인 및 검색에 이름이 표시됩니다.<br>45~50번은 수업을 하지 않고 참관만 하는 분도 포함됩니다.</div>
+        <div class="ibox">각 번호에 실제 교사 이름을 입력 후 저장하면, 클라우드에 연동되어 모두가 볼 수 있습니다.</div>
         <div class="mgrid" id="mgrid"></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="btn bp" onclick="saveNames()">💾 저장</button>
+          <button class="btn bp" onclick="saveNames()">☁️ 클라우드에 저장</button>
           <button class="btn bs" onclick="clearNames()">🗑 초기화</button>
         </div>
         <div class="sbar" id="nameSt"></div>
@@ -319,7 +278,7 @@ select.msel:focus{border-color:var(--green);}
       <div class="card">
         <div class="ctitle">📋 파일 구조 안내</div>
         <div class="ibox">
-          <strong>① 참여 횟수 파일</strong> — 행: 수업 진행 교사 (1~44번), 열: 참관한 교사 (1~50번), 셀값: 참관 시 1, 마지막 행: 총계<br>
+          <strong>① 참여 횟수 파일</strong> — 행: 수업 진행 교사 (1~47번), 열: 참관한 교사 (1~50번), 셀값: 참관 시 1, 마지막 행: 총계<br>
           <strong>② 수업장학 파일</strong> — 헤더: 교과/이름/일시/요일/교시/학급 · 수업 진행 교사별 수업 정보
         </div>
         <div class="ctitle">📊 참여 횟수 파일</div>
@@ -339,42 +298,95 @@ select.msel:focus{border-color:var(--green);}
         <input type="file" id="f2" accept=".xlsx,.xls" onchange="rf(this,2)">
         <div id="b2"></div>
         <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="btn bp" id="procBtn" onclick="processFiles()" disabled>⚡ 처리하기</button>
+          <button class="btn bp" id="procBtn" onclick="processFiles()" disabled>⚡ 클라우드에 업로드하기</button>
           <button class="btn bs" onclick="loadSample()">📋 내장 데이터 사용</button>
         </div>
         <div class="sbar" id="procSt"></div>
       </div>
     </div>
 
-  </div><!-- /adminMain -->
-</div><!-- /wrap -->
+  </div></div><script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  // ★★★★ 여기에 아까 복사하신 진짜 설정값을 덮어쓰기 하세요! ★★★★
+const firebaseConfig = {
+  apiKey: "AIzaSyBNnVWQ-vJcRPoYlSH1t4DvxNPmwSX03Mo",
+  authDomain: "class-observation-count.firebaseapp.com",
+  projectId: "class-observation-count",
+  storageBucket: "class-observation-count.firebasestorage.app",
+  messagingSenderId: "302915618741",
+  appId: "1:302915618741:web:314a3b8a6a66ca4e03bbfc",
+  measurementId: "G-HXQM75RFLQ"
+};
+
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // 일반 스크립트에서도 쓸 수 있게 창(window)에 등록
+  window.db = db;
+  window.doc = doc;
+  window.setDoc = setDoc;
+  window.getDoc = getDoc;
+
+  // Firebase 준비 완료 신호 보내기
+  window.dispatchEvent(new Event('firebaseReady'));
+</script>
 
 <script>
-// ── 비밀번호 (변경 원하면 여기서 수정) ──────────────────────────────
 const ADMIN_PW = '1234';
-
-// ── 내장 데이터 ──────────────────────────────────────────────────────
-const SAMPLE = {"1번":{"attended":[{"teacher_num":"2번","subject":"체육","date":"4.25","day":"목","period":"1교시","class_":"3학년 5반"},{"teacher_num":"4번","subject":"체육","date":"5.08","day":"수","period":"2교시","class_":"2학년 6반"}],"total":2},"2번":{"attended":[{"teacher_num":"1번","subject":"체육","date":"4.15","day":"월","period":"4교시","class_":"3학년 3반"},{"teacher_num":"29번","subject":"음악","date":"9.26","day":"목","period":"3교시","class_":"1-6(음악실)"},{"teacher_num":"38번","subject":"영어","date":"10.18","day":"금","period":"6교시","class_":"1학년 1반"}],"total":3},"3번":{"attended":[{"teacher_num":"1번","subject":"체육","date":"4.15","day":"월","period":"4교시","class_":"3학년 3반"},{"teacher_num":"10번","subject":"사회","date":"6.03","day":"월","period":"4교시","class_":"1학년 7반"},{"teacher_num":"41번","subject":"영어","date":"10.22","day":"화","period":"4교시","class_":"1학년 3반"}],"total":3},"4번":{"attended":[{"teacher_num":"2번","subject":"체육","date":"4.25","day":"목","period":"1교시","class_":"3학년 5반"},{"teacher_num":"3번","subject":"체육","date":"5.07","day":"화","period":"1교시","class_":"1학년 7반"},{"teacher_num":"40번","subject":"중국어","date":"10.22","day":"화","period":"3교시","class_":"3학년 4반"}],"total":3},"5번":{"attended":[{"teacher_num":"6번","subject":"수학","date":"5.14","day":"화","period":"4교시","class_":"3학년 3반"},{"teacher_num":"7번","subject":"수학","date":"5.21","day":"화","period":"5교시","class_":"2학년 1반"},{"teacher_num":"9번","subject":"수학","date":"5.24","day":"금","period":"2교시","class_":"1학년 6반"}],"total":3},"6번":{"attended":[{"teacher_num":"5번","subject":"수학","date":"5.14","day":"화","period":"5교시","class_":"2학년 6반"},{"teacher_num":"7번","subject":"수학","date":"5.21","day":"화","period":"5교시","class_":"2학년 1반"},{"teacher_num":"20번","subject":"과학","date":"6.19","day":"수","period":"4교시","class_":"1학년 2반"}],"total":3},"7번":{"attended":[{"teacher_num":"5번","subject":"수학","date":"5.14","day":"화","period":"5교시","class_":"2학년 6반"},{"teacher_num":"8번","subject":"수학","date":"5.22","day":"수","period":"2교시","class_":"3학년 6반"},{"teacher_num":"9번","subject":"수학","date":"5.24","day":"금","period":"2교시","class_":"1학년 6반"}],"total":3},"8번":{"attended":[{"teacher_num":"6번","subject":"수학","date":"5.14","day":"화","period":"4교시","class_":"3학년 3반"},{"teacher_num":"9번","subject":"수학","date":"5.24","day":"금","period":"2교시","class_":"1학년 6반"},{"teacher_num":"20번","subject":"과학","date":"6.19","day":"수","period":"4교시","class_":"1학년 2반"}],"total":3},"9번":{"attended":[{"teacher_num":"5번","subject":"수학","date":"5.14","day":"화","period":"5교시","class_":"2학년 6반"},{"teacher_num":"7번","subject":"수학","date":"5.21","day":"화","period":"5교시","class_":"2학년 1반"},{"teacher_num":"8번","subject":"수학","date":"5.22","day":"수","period":"2교시","class_":"3학년 6반"}],"total":3},"10번":{"attended":[{"teacher_num":"12번","subject":"과학","date":"6.07","day":"금","period":"5교시","class_":"2학년 1반"},{"teacher_num":"14번","subject":"과학","date":"6.11","day":"화","period":"4교시","class_":"2학년 4반"},{"teacher_num":"16번","subject":"도덕","date":"6.13","day":"목","period":"5교시","class_":"1학년 5반"}],"total":3},"11번":{"attended":[{"teacher_num":"12번","subject":"과학","date":"6.07","day":"금","period":"5교시","class_":"2학년 1반"},{"teacher_num":"22번","subject":"역사","date":"6.2","day":"목","period":"5교시","class_":"2학년 1반"},{"teacher_num":"23번","subject":"과학","date":"6.21","day":"금","period":"5교시","class_":"1학년 3반"}],"total":3},"12번":{"attended":[{"teacher_num":"10번","subject":"사회","date":"6.03","day":"월","period":"4교시","class_":"1학년 7반"},{"teacher_num":"11번","subject":"과학","date":"6.05","day":"수","period":"5교시","class_":"3학년 6반"},{"teacher_num":"22번","subject":"역사","date":"6.2","day":"목","period":"5교시","class_":"2학년 1반"},{"teacher_num":"39번","subject":"한문","date":"10.21","day":"월","period":"3교시","class_":"1학년 5반"}],"total":4},"13번":{"attended":[{"teacher_num":"11번","subject":"과학","date":"6.05","day":"수","period":"5교시","class_":"3학년 6반"},{"teacher_num":"12번","subject":"과학","date":"6.07","day":"금","period":"5교시","class_":"2학년 1반"},{"teacher_num":"23번","subject":"과학","date":"6.21","day":"금","period":"5교시","class_":"1학년 3반"}],"total":3},"14번":{"attended":[{"teacher_num":"10번","subject":"사회","date":"6.03","day":"월","period":"4교시","class_":"1학년 7반"},{"teacher_num":"12번","subject":"과학","date":"6.07","day":"금","period":"5교시","class_":"2학년 1반"},{"teacher_num":"16번","subject":"도덕","date":"6.13","day":"목","period":"5교시","class_":"1학년 5반"}],"total":3},"15번":{"attended":[{"teacher_num":"17번","subject":"사회","date":"6.14","day":"금","period":"2교시","class_":"1학년 4반"},{"teacher_num":"34번","subject":"영어","date":"10.16","day":"수","period":"4교시","class_":"3학년 5반"}],"total":2},"16번":{"attended":[{"teacher_num":"10번","subject":"사회","date":"6.03","day":"월","period":"4교시","class_":"1학년 7반"},{"teacher_num":"14번","subject":"과학","date":"6.11","day":"화","period":"4교시","class_":"2학년 4반"},{"teacher_num":"21번","subject":"국어","date":"6.2","day":"목","period":"3교시","class_":"3학년 5반"}],"total":3},"17번":{"attended":[{"teacher_num":"13번","subject":"도덕","date":"6.07","day":"금","period":"5교시","class_":"2학년 7반"},{"teacher_num":"15번","subject":"사회","date":"6.12","day":"수","period":"6교시","class_":"1학년 8반"},{"teacher_num":"21번","subject":"국어","date":"6.2","day":"목","period":"3교시","class_":"3학년 5반"}],"total":3},"18번":{"attended":[{"teacher_num":"9번","subject":"수학","date":"5.24","day":"금","period":"2교시","class_":"1학년 6반"},{"teacher_num":"19번","subject":"국어","date":"6.19","day":"수","period":"2교시","class_":"1학년 2반"},{"teacher_num":"40번","subject":"중국어","date":"10.22","day":"화","period":"3교시","class_":"3학년 4반"}],"total":3},"19번":{"attended":[{"teacher_num":"9번","subject":"수학","date":"5.24","day":"금","period":"2교시","class_":"1학년 6반"},{"teacher_num":"15번","subject":"사회","date":"6.12","day":"수","period":"6교시","class_":"1학년 8반"},{"teacher_num":"26번","subject":"국어","date":"6.28","day":"금","period":"5교시","class_":"1학년 4반"}],"total":3},"20번":{"attended":[{"teacher_num":"18번","subject":"국어","date":"6.19","day":"수","period":"4교시","class_":"2학년 6반"},{"teacher_num":"19번","subject":"국어","date":"6.19","day":"수","period":"2교시","class_":"1학년 2반"},{"teacher_num":"25번","subject":"국어","date":"6.24","day":"월","period":"5교시","class_":"2학년 3반"}],"total":3},"21번":{"attended":[{"teacher_num":"15번","subject":"사회","date":"6.12","day":"수","period":"6교시","class_":"1학년 8반"},{"teacher_num":"24번","subject":"역사","date":"6.21","day":"금","period":"4교시","class_":"3학년 2반"},{"teacher_num":"27번","subject":"기술가정","date":"9.23","day":"월","period":"1교시","class_":"2학년 2반"},{"teacher_num":"32번","subject":"특수","date":"10.11","day":"금","period":"2교시","class_":"통합교육지원실"},{"teacher_num":"33번","subject":"영어","date":"10.15","day":"화","period":"4교시","class_":"1학년 7반"},{"teacher_num":"34번","subject":"영어","date":"10.16","day":"수","period":"4교시","class_":"3학년 5반"}],"total":7},"22번":{"attended":[{"teacher_num":"7번","subject":"수학","date":"5.21","day":"화","period":"5교시","class_":"2학년 1반"},{"teacher_num":"16번","subject":"도덕","date":"6.13","day":"목","period":"5교시","class_":"1학년 5반"},{"teacher_num":"25번","subject":"국어","date":"6.24","day":"월","period":"5교시","class_":"2학년 3반"}],"total":3},"23번":{"attended":[{"teacher_num":"11번","subject":"과학","date":"6.05","day":"수","period":"5교시","class_":"3학년 6반"},{"teacher_num":"12번","subject":"과학","date":"6.07","day":"금","period":"5교시","class_":"2학년 1반"},{"teacher_num":"13번","subject":"도덕","date":"6.07","day":"금","period":"5교시","class_":"2학년 7반"}],"total":3},"24번":{"attended":[{"teacher_num":"21번","subject":"국어","date":"6.2","day":"목","period":"3교시","class_":"3학년 5반"},{"teacher_num":"29번","subject":"음악","date":"9.26","day":"목","period":"3교시","class_":"1-6(음악실)"},{"teacher_num":"39번","subject":"한문","date":"10.21","day":"월","period":"3교시","class_":"1학년 5반"}],"total":3},"25번":{"attended":[{"teacher_num":"13번","subject":"도덕","date":"6.07","day":"금","period":"5교시","class_":"2학년 7반"},{"teacher_num":"21번","subject":"국어","date":"6.2","day":"목","period":"3교시","class_":"3학년 5반"},{"teacher_num":"26번","subject":"국어","date":"6.28","day":"금","period":"5교시","class_":"1학년 4반"}],"total":3},"26번":{"attended":[{"teacher_num":"18번","subject":"국어","date":"6.19","day":"수","period":"4교시","class_":"2학년 6반"},{"teacher_num":"19번","subject":"국어","date":"6.19","day":"수","period":"2교시","class_":"1학년 2반"},{"teacher_num":"20번","subject":"과학","date":"6.19","day":"수","period":"4교시","class_":"1학년 2반"}],"total":3},"27번":{"attended":[{"teacher_num":"7번","subject":"수학","date":"5.21","day":"화","period":"5교시","class_":"2학년 1반"},{"teacher_num":"41번","subject":"영어","date":"10.22","day":"화","period":"4교시","class_":"1학년 3반"},{"teacher_num":"42번","subject":"정보","date":"10.23","day":"수","period":"6교시","class_":"2-4(멀티미디어실)"}],"total":3},"28번":{"attended":[{"teacher_num":"35번","subject":"영어","date":"10.17","day":"목","period":"6교시","class_":"2학년 5반"},{"teacher_num":"36번","subject":"미술","date":"10.18","day":"금","period":"3교시","class_":"1학년 7반"},{"teacher_num":"37번","subject":"미술","date":"10.18","day":"금","period":"5교시","class_":"2학년 4반"}],"total":3},"29번":{"attended":[{"teacher_num":"32번","subject":"특수","date":"10.11","day":"금","period":"2교시","class_":"통합교육지원실"},{"teacher_num":"39번","subject":"한문","date":"10.21","day":"월","period":"3교시","class_":"1학년 5반"},{"teacher_num":"43번","subject":"영어","date":"10.23","day":"수","period":"6교시","class_":"2학년 5반"}],"total":3},"30번":{"attended":[{"teacher_num":"21번","subject":"국어","date":"6.2","day":"목","period":"3교시","class_":"3학년 5반"},{"teacher_num":"26번","subject":"국어","date":"6.28","day":"금","period":"5교시","class_":"1학년 4반"},{"teacher_num":"43번","subject":"영어","date":"10.23","day":"수","period":"6교시","class_":"2학년 5반"}],"total":3},"31번":{"attended":[{"teacher_num":"15번","subject":"사회","date":"6.12","day":"수","period":"6교시","class_":"1학년 8반"},{"teacher_num":"32번","subject":"특수","date":"10.11","day":"금","period":"2교시","class_":"통합교육지원실"},{"teacher_num":"33번","subject":"영어","date":"10.15","day":"화","period":"4교시","class_":"1학년 7반"}],"total":3},"32번":{"attended":[{"teacher_num":"23번","subject":"과학","date":"6.21","day":"금","period":"5교시","class_":"1학년 3반"},{"teacher_num":"31번","subject":"음악","date":"10.1","day":"목","period":"2교시","class_":"3학년 6반"},{"teacher_num":"34번","subject":"영어","date":"10.16","day":"수","period":"4교시","class_":"3학년 5반"}],"total":3},"33번":{"attended":[{"teacher_num":"30번","subject":"기술가정","date":"9.27","day":"금","period":"1교시","class_":"2학년 8반"}],"total":1},"34번":{"attended":[{"teacher_num":"8번","subject":"수학","date":"5.22","day":"수","period":"2교시","class_":"3학년 6반"},{"teacher_num":"30번","subject":"기술가정","date":"9.27","day":"금","period":"1교시","class_":"2학년 8반"},{"teacher_num":"31번","subject":"음악","date":"10.1","day":"목","period":"2교시","class_":"3학년 6반"}],"total":3},"35번":{"attended":[{"teacher_num":"10번","subject":"사회","date":"6.03","day":"월","period":"4교시","class_":"1학년 7반"},{"teacher_num":"30번","subject":"기술가정","date":"9.27","day":"금","period":"1교시","class_":"2학년 8반"},{"teacher_num":"37번","subject":"미술","date":"10.18","day":"금","period":"5교시","class_":"2학년 4반"},{"teacher_num":"41번","subject":"영어","date":"10.22","day":"화","period":"4교시","class_":"1학년 3반"}],"total":4},"36번":{"attended":[{"teacher_num":"28번","subject":"기술가정","date":"9.26","day":"목","period":"2교시","class_":"3학년 4반"},{"teacher_num":"35번","subject":"영어","date":"10.17","day":"목","period":"6교시","class_":"2학년 5반"},{"teacher_num":"37번","subject":"미술","date":"10.18","day":"금","period":"5교시","class_":"2학년 4반"}],"total":3},"37번":{"attended":[{"teacher_num":"28번","subject":"기술가정","date":"9.26","day":"목","period":"2교시","class_":"3학년 4반"},{"teacher_num":"35번","subject":"영어","date":"10.17","day":"목","period":"6교시","class_":"2학년 5반"},{"teacher_num":"36번","subject":"미술","date":"10.18","day":"금","period":"3교시","class_":"1학년 7반"}],"total":3},"38번":{"attended":[{"teacher_num":"32번","subject":"특수","date":"10.11","day":"금","period":"2교시","class_":"통합교육지원실"},{"teacher_num":"35번","subject":"영어","date":"10.17","day":"목","period":"6교시","class_":"2학년 5반"},{"teacher_num":"39번","subject":"한문","date":"10.21","day":"월","period":"3교시","class_":"1학년 5반"}],"total":3},"39번":{"attended":[{"teacher_num":"10번","subject":"사회","date":"6.03","day":"월","period":"4교시","class_":"1학년 7반"},{"teacher_num":"20번","subject":"과학","date":"6.19","day":"수","period":"4교시","class_":"1학년 2반"},{"teacher_num":"24번","subject":"역사","date":"6.21","day":"금","period":"4교시","class_":"3학년 2반"}],"total":3},"40번":{"attended":[{"teacher_num":"12번","subject":"과학","date":"6.07","day":"금","period":"5교시","class_":"2학년 1반"},{"teacher_num":"23번","subject":"과학","date":"6.21","day":"금","period":"5교시","class_":"1학년 3반"},{"teacher_num":"25번","subject":"국어","date":"6.24","day":"월","period":"5교시","class_":"2학년 3반"}],"total":3},"41번":{"attended":[{"teacher_num":"27번","subject":"기술가정","date":"9.23","day":"월","period":"1교시","class_":"2학년 2반"},{"teacher_num":"42번","subject":"정보","date":"10.23","day":"수","period":"6교시","class_":"2-4(멀티미디어실)"},{"teacher_num":"43번","subject":"영어","date":"10.23","day":"수","period":"6교시","class_":"2학년 5반"}],"total":4},"42번":{"attended":[{"teacher_num":"13번","subject":"도덕","date":"6.07","day":"금","period":"5교시","class_":"2학년 7반"},{"teacher_num":"27번","subject":"기술가정","date":"9.23","day":"월","period":"1교시","class_":"2학년 2반"},{"teacher_num":"32번","subject":"특수","date":"10.11","day":"금","period":"2교시","class_":"통합교육지원실"},{"teacher_num":"43번","subject":"영어","date":"10.23","day":"수","period":"6교시","class_":"2학년 5반"}],"total":4},"43번":{"attended":[{"teacher_num":"20번","subject":"과학","date":"6.19","day":"수","period":"4교시","class_":"1학년 2반"},{"teacher_num":"41번","subject":"영어","date":"10.22","day":"화","period":"4교시","class_":"1학년 3반"},{"teacher_num":"42번","subject":"정보","date":"10.23","day":"수","period":"6교시","class_":"2-4(멀티미디어실)"}],"total":4},"44번":{"attended":[{"teacher_num":"27번","subject":"기술가정","date":"9.23","day":"월","period":"1교시","class_":"2학년 2반"},{"teacher_num":"40번","subject":"중국어","date":"10.22","day":"화","period":"3교시","class_":"3학년 4반"}],"total":2},"45번":{"attended":[{"teacher_num":"1번","subject":"체육","date":"4.15","day":"월","period":"4교시","class_":"3학년 3반"},{"teacher_num":"2번","subject":"체육","date":"4.25","day":"목","period":"1교시","class_":"3학년 5반"},{"teacher_num":"3번","subject":"체육","date":"5.07","day":"화","period":"1교시","class_":"1학년 7반"},{"teacher_num":"4번","subject":"체육","date":"5.08","day":"수","period":"2교시","class_":"2학년 6반"},{"teacher_num":"5번","subject":"수학","date":"5.14","day":"화","period":"5교시","class_":"2학년 6반"},{"teacher_num":"6번","subject":"수학","date":"5.14","day":"화","period":"4교시","class_":"3학년 3반"},{"teacher_num":"7번","subject":"수학","date":"5.21","day":"화","period":"5교시","class_":"2학년 1반"},{"teacher_num":"8번","subject":"수학","date":"5.22","day":"수","period":"2교시","class_":"3학년 6반"},{"teacher_num":"9번","subject":"수학","date":"5.24","day":"금","period":"2교시","class_":"1학년 6반"},{"teacher_num":"10번","subject":"사회","date":"6.03","day":"월","period":"4교시","class_":"1학년 7반"},{"teacher_num":"11번","subject":"과학","date":"6.05","day":"수","period":"5교시","class_":"3학년 6반"},{"teacher_num":"12번","subject":"과학","date":"6.07","day":"금","period":"5교시","class_":"2학년 1반"},{"teacher_num":"14번","subject":"과학","date":"6.11","day":"화","period":"4교시","class_":"2학년 4반"},{"teacher_num":"15번","subject":"사회","date":"6.12","day":"수","period":"6교시","class_":"1학년 8반"},{"teacher_num":"17번","subject":"사회","date":"6.14","day":"금","period":"2교시","class_":"1학년 4반"},{"teacher_num":"18번","subject":"국어","date":"6.19","day":"수","period":"4교시","class_":"2학년 6반"},{"teacher_num":"19번","subject":"국어","date":"6.19","day":"수","period":"2교시","class_":"1학년 2반"},{"teacher_num":"21번","subject":"국어","date":"6.2","day":"목","period":"3교시","class_":"3학년 5반"},{"teacher_num":"23번","subject":"과학","date":"6.21","day":"금","period":"5교시","class_":"1학년 3반"},{"teacher_num":"24번","subject":"역사","date":"6.21","day":"금","period":"4교시","class_":"3학년 2반"},{"teacher_num":"25번","subject":"국어","date":"6.24","day":"월","period":"5교시","class_":"2학년 3반"},{"teacher_num":"26번","subject":"국어","date":"6.28","day":"금","period":"5교시","class_":"1학년 4반"},{"teacher_num":"28번","subject":"기술가정","date":"9.26","day":"목","period":"2교시","class_":"3학년 4반"},{"teacher_num":"29번","subject":"음악","date":"9.26","day":"목","period":"3교시","class_":"1-6(음악실)"},{"teacher_num":"30번","subject":"기술가정","date":"9.27","day":"금","period":"1교시","class_":"2학년 8반"},{"teacher_num":"31번","subject":"음악","date":"10.1","day":"목","period":"2교시","class_":"3학년 6반"},{"teacher_num":"32번","subject":"특수","date":"10.11","day":"금","period":"2교시","class_":"통합교육지원실"},{"teacher_num":"33번","subject":"영어","date":"10.15","day":"화","period":"4교시","class_":"1학년 7반"},{"teacher_num":"35번","subject":"영어","date":"10.17","day":"목","period":"6교시","class_":"2학년 5반"},{"teacher_num":"36번","subject":"미술","date":"10.18","day":"금","period":"3교시","class_":"1학년 7반"},{"teacher_num":"37번","subject":"미술","date":"10.18","day":"금","period":"5교시","class_":"2학년 4반"},{"teacher_num":"38번","subject":"영어","date":"10.18","day":"금","period":"6교시","class_":"1학년 1반"},{"teacher_num":"39번","subject":"한문","date":"10.21","day":"월","period":"3교시","class_":"1학년 5반"},{"teacher_num":"42번","subject":"정보","date":"10.23","day":"수","period":"6교시","class_":"2-4(멀티미디어실)"},{"teacher_num":"43번","subject":"영어","date":"10.23","day":"수","period":"6교시","class_":"2학년 5반"}],"total":35},"46번":{"attended":[],"total":0},"47번":{"attended":[],"total":0},"48번":{"attended":[],"total":0},"49번":{"attended":[],"total":0},"50번":{"attended":[],"total":0}};
-
-// ── 앱 상태 ──────────────────────────────────────────────────────────
+const SAMPLE = {"1번":{"attended":[{"teacher_num":"2번","subject":"체육","date":"4.25","day":"목","period":"1교시","class_":"3학년 5반"}],"total":1}}; // 샘플 축소 (가독성을 위해)
 const A = { data:{}, nameMap:{}, isAdmin:false };
 let R1=null, R2=null;
 
-function init(){
-  try{ const s=localStorage.getItem('nmap'); if(s) A.nameMap=JSON.parse(s); }catch(e){}
-  A.data = JSON.parse(JSON.stringify(SAMPLE));
+// ── Firebase 클라우드 초기화 로직 ───────────────────────────────────────
+async function init() {
+  const loginBtn = document.getElementById('mainLoginBtn');
+  if(loginBtn) { loginBtn.disabled = true; loginBtn.textContent = "☁️ 클라우드 연결 중..."; }
+
+  if(window.getDoc && window.db) {
+    try {
+      // 1. 이름 목록 불러오기
+      const nameSnap = await window.getDoc(window.doc(window.db, "settings", "nameMap"));
+      if(nameSnap.exists() && nameSnap.data().data) A.nameMap = nameSnap.data().data;
+
+      // 2. 엑셀 데이터 불러오기
+      const dataSnap = await window.getDoc(window.doc(window.db, "settings", "mainData"));
+      if(dataSnap.exists() && dataSnap.data().data) A.data = dataSnap.data().data;
+      else A.data = JSON.parse(JSON.stringify(SAMPLE));
+
+    } catch(e) {
+      console.error("Firebase 로드 에러:", e);
+      A.data = JSON.parse(JSON.stringify(SAMPLE));
+    }
+  } else {
+    A.data = JSON.parse(JSON.stringify(SAMPLE));
+  }
+
+  if(loginBtn) { loginBtn.disabled = false; loginBtn.textContent = "로그인"; }
 }
 
-// ── 이름 헬퍼 ─────────────────────────────────────────────────────────
-const dn = id => A.nameMap[id] || id;
+// 모듈이 준비되면 init 실행
+window.addEventListener('firebaseReady', init);
 
+// ── 클라우드 비밀번호 관리 ──────────────────────────────────────────────
+async function getPwMap(){
+  try {
+    const snap = await window.getDoc(window.doc(window.db, "settings", "pwMap"));
+    return snap.exists() ? snap.data().data || {} : {};
+  } catch(e) { return {}; }
+}
+async function savePwMap(m){
+  try { await window.setDoc(window.doc(window.db, "settings", "pwMap"), { data: m }); } catch(e) {}
+}
+
+const dn = id => A.nameMap[id] || id;
 function teacherCell(id){
   const name = A.nameMap[id];
   if(name) return `<span class="tn-main">${name}</span><span class="tn-sub">${id}</span>`;
   return `<span style="color:var(--muted)">${id}</span>`;
 }
-
-// 이름 → ID 역탐색
 function findIdByName(name){
   const q = name.trim().toLowerCase();
   if(!q) return null;
@@ -382,15 +394,10 @@ function findIdByName(name){
   return found ? found[0] : null;
 }
 
-// ── 개인 비밀번호 관리 ────────────────────────────────────────────────
-function getPwMap(){ try{ const s=localStorage.getItem('pwmap'); return s?JSON.parse(s):{}; }catch(e){ return {}; } }
-function savePwMap(m){ try{ localStorage.setItem('pwmap',JSON.stringify(m)); }catch(e){} }
-
-// ── 설정 모달 ─────────────────────────────────────────────────────────
+// 설정 모달
 function openSetModal(tab){
   document.getElementById('setModal').classList.add('on');
   switchSetTab(tab||'pw');
-  // 에러 초기화
   document.getElementById('admin-err').style.display='none';
   document.getElementById('pw-set-msg').className='set-msg';
   document.getElementById('setNameInput').value='';
@@ -409,22 +416,27 @@ function switchSetTab(name){
   },100);
 }
 
-// 비밀번호 저장
-function doSavePw(){
+// ── [수정] 클라우드에 비밀번호 저장 ──
+async function doSavePw(){
   const name = document.getElementById('setNameInput').value.trim();
   const pw   = document.getElementById('setNewPw').value.trim();
   const msg  = document.getElementById('pw-set-msg');
   if(!name){ msg.className='set-msg er'; msg.textContent='이름을 입력하세요'; return; }
   const id = findIdByName(name);
-  if(!id){ msg.className='set-msg er'; msg.textContent='등록된 이름이 없습니다. 관리자에게 이름 등록을 요청하세요'; return; }
+  if(!id){ msg.className='set-msg er'; msg.textContent='등록된 이름이 없습니다. 관리자에게 문의하세요'; return; }
   if(!pw){ msg.className='set-msg er'; msg.textContent='비밀번호를 입력하세요'; return; }
-  const m = getPwMap(); m[name.toLowerCase()]=pw; savePwMap(m);
-  msg.className='set-msg ok'; msg.textContent=`✅ ${name} 비밀번호가 저장되었습니다`;
+
+  msg.className='set-msg inf'; msg.textContent='⏳ 클라우드에 저장 중...';
+  
+  const m = await getPwMap(); 
+  m[name.toLowerCase()] = pw; 
+  await savePwMap(m);
+
+  msg.className='set-msg ok'; msg.textContent=`✅ ${name}님의 비밀번호가 등록되었습니다!`;
   document.getElementById('setNewPw').value='';
   setTimeout(()=>closeSetModal(), 1800);
 }
 
-// 관리자 로그인
 function doAdminLogin(){
   const pw = document.getElementById('adminPwInput').value;
   const err = document.getElementById('admin-err');
@@ -455,18 +467,25 @@ function logout(){
   document.getElementById('loginPw').value='';
 }
 
-// ── 메인 로그인 ───────────────────────────────────────────────────────
-function doMainLogin(){
+// ── [수정] 클라우드 로그인 확인 ──
+async function doMainLogin(){
   const name = document.getElementById('loginName').value.trim();
   const pw   = document.getElementById('loginPw').value;
   const err  = document.getElementById('login-err');
   if(!name){ err.textContent='이름을 입력하세요'; err.classList.add('on'); return; }
   const id = findIdByName(name);
-  if(!id){ err.textContent='등록된 이름이 없습니다. 관리자에게 이름 등록을 요청하거나 비밀번호 설정을 먼저 하세요'; err.classList.add('on'); return; }
-  const m = getPwMap();
-  if(!m[name.toLowerCase()]){ err.textContent='비밀번호가 설정되지 않았습니다. 오른쪽 상단 🔑 비밀번호 설정을 먼저 해주세요'; err.classList.add('on'); return; }
+  if(!id){ err.textContent='등록된 이름이 없습니다. 관리자에게 문의하세요'; err.classList.add('on'); return; }
+
+  err.classList.remove('login-err'); err.classList.add('set-msg', 'inf', 'on');
+  err.textContent='☁️ 클라우드에서 확인 중...';
+
+  const m = await getPwMap();
+  
+  err.classList.remove('set-msg', 'inf'); err.classList.add('login-err');
+
+  if(!m[name.toLowerCase()]){ err.textContent='비밀번호가 설정되지 않았습니다. 우측 상단에서 설정해주세요.'; err.classList.add('on'); return; }
   if(m[name.toLowerCase()]!==pw){ err.textContent='비밀번호가 틀렸습니다'; err.classList.add('on'); return; }
-  // 로그인 성공
+  
   err.classList.remove('on');
   showMyResult(id, name);
 }
@@ -488,7 +507,6 @@ function doLogout(){
   document.getElementById('result').innerHTML='';
 }
 
-// ── 패널 전환 (관리자용) ──────────────────────────────────────────────
 function showPanel(name){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.snav').forEach(b=>b.classList.remove('on'));
@@ -498,7 +516,6 @@ function showPanel(name){
   if(name==='names') renderGrid();
 }
 
-// ── 결과 출력 ─────────────────────────────────────────────────────────
 function renderResult(id){
   const d = A.data[id]; if(!d) return;
   const att = d.attended;
@@ -542,7 +559,7 @@ function renderResult(id){
     </div>`;
 }
 
-// ── 파일 업로드 ────────────────────────────────────────────────────────
+// 파일 업로드
 function dov(e,z){ e.preventDefault(); document.getElementById(z).classList.add('ov'); }
 function dlv(z){ document.getElementById(z).classList.remove('ov'); }
 function dop(e,n){ e.preventDefault(); dlv('z'+n); const f=e.dataTransfer.files[0]; if(f) readF(f,n); }
@@ -567,7 +584,8 @@ function setBadge(n,fn,cls,msg){
   document.getElementById('b'+n).innerHTML=`<div class="fbadge"><span>📄</span><span class="fn">${fn}</span><span class="f${cls}">${ic[cls]} ${msg}</span></div>`;
 }
 
-function processFiles(){
+// ── [수정] 엑셀 데이터 클라우드 저장 ──
+async function processFiles(){
   try{
     let hr=-1;
     for(let i=0;i<R2.length;i++){ if(R2[i].some(c=>String(c).includes('이름')||String(c).includes('교과'))){ hr=i; break; } }
@@ -603,9 +621,15 @@ function processFiles(){
       }
       newData[obsId]={attended,total:attended.length};
     });
+    
     A.data=newData;
     renderGrid();
-    showSt('procSt',`✅ 완료! 참관자 ${Object.keys(newData).length}명 데이터 로드됨`,'ok');
+    
+    showSt('procSt',`⏳ 클라우드에 업로드 중입니다...`,'inf');
+    if(window.setDoc) {
+      await window.setDoc(window.doc(window.db, "settings", "mainData"), { data: A.data });
+    }
+    showSt('procSt',`✅ 업로드 완료! 참관자 ${Object.keys(newData).length}명 데이터가 모두에게 공유됩니다.`,'ok');
   }catch(err){ showSt('procSt','❌ 오류: '+err.message,'er'); }
 }
 
@@ -615,7 +639,6 @@ function loadSample(){
   showPanel('names');
 }
 
-// ── 이름 매핑 ──────────────────────────────────────────────────────────
 function renderGrid(){
   const g=document.getElementById('mgrid');
   const ids=Object.keys(A.data).sort((a,b)=>parseInt(a)-parseInt(b));
@@ -627,29 +650,35 @@ function renderGrid(){
         value="${A.nameMap[id]||''}" oninput="A.nameMap['${id}']=this.value">
     </div>`).join('');
 }
-function saveNames(){
+
+// ── [수정] 클라우드에 이름 저장 ──
+async function saveNames(){
   document.querySelectorAll('.mi').forEach(el=>{ A.nameMap[el.dataset.id]=el.value.trim(); });
-  try{ localStorage.setItem('nmap',JSON.stringify(A.nameMap)); }catch(e){}
-  showSt('nameSt','✅ 저장 완료. 이제 이름으로 로그인할 수 있습니다.','ok');
-}
-function clearNames(){
-  A.nameMap={}; try{ localStorage.removeItem('nmap'); }catch(e){}
-  renderGrid(); showSt('nameSt','🗑 초기화 완료','inf');
+  showSt('nameSt','⏳ 클라우드에 이름 정보 저장 중...','inf');
+  try{ 
+    await window.setDoc(window.doc(window.db, "settings", "nameMap"), { data: A.nameMap });
+    showSt('nameSt','✅ 저장 완료! 이제 누구나 이름으로 로그인할 수 있습니다.','ok');
+  }catch(e){
+    showSt('nameSt','❌ 저장 실패: ' + e.message, 'er');
+  }
 }
 
-// ── 유틸 ──────────────────────────────────────────────────────────────
+// ── [수정] 클라우드 이름 초기화 ──
+async function clearNames(){
+  A.nameMap={}; 
+  try{ await window.setDoc(window.doc(window.db, "settings", "nameMap"), { data: {} }); }catch(e){}
+  renderGrid(); showSt('nameSt','🗑 클라우드 초기화 완료','inf');
+}
+
 function showSt(id,msg,cls){
   const el=document.getElementById(id); if(!el) return;
   el.textContent=msg; el.className=`sbar on ${cls}`;
   setTimeout(()=>el.classList.remove('on'),7000);
 }
 
-// 모달 바깥 클릭 닫기
 document.getElementById('setModal').addEventListener('click', function(e){
   if(e.target===this) closeSetModal();
 });
-
-init();
 </script>
 </body>
 </html>
